@@ -27,7 +27,7 @@ Dump of assembler code for function main:
    0x080489f8 <+72>:	push   eax
    0x080489f9 <+73>:	mov    eax,DWORD PTR [ebx]
    0x080489fb <+75>:	push   eax
-   0x080489fc <+76>:	push   0x8049622
+   0x080489fc <+76>:	push   0x8049622 			"%s could not open %s"
    0x08048a01 <+81>:	call   0x8048810 <printf@plt>
    0x08048a06 <+86>:	add    esp,0xfffffff4
    0x08048a09 <+89>:	push   0x8
@@ -35,7 +35,7 @@ Dump of assembler code for function main:
    0x08048a10 <+96>:	add    esp,0xfffffff8
    0x08048a13 <+99>:	mov    eax,DWORD PTR [ebx]
    0x08048a15 <+101>:	push   eax
-   0x08048a16 <+102>:	push   0x804963f
+   0x08048a16 <+102>:	push   0x804963f			"Usage %s [input_file]"
    0x08048a1b <+107>:	call   0x8048810 <printf@plt>
    0x08048a20 <+112>:	add    esp,0xfffffff4
    0x08048a23 <+115>:	push   0x8
@@ -43,10 +43,10 @@ Dump of assembler code for function main:
    0x08048a2a <+122>:	lea    esi,[esi+0x0]
    0x08048a30 <+128>:	call   0x8049160 <initialize_bomb>
    0x08048a35 <+133>:	add    esp,0xfffffff4
-   0x08048a38 <+136>:	push   0x8049660
+   0x08048a38 <+136>:	push   0x8049660			"Welcome this is my little bomb ... 6 stages with \n"
    0x08048a3d <+141>:	call   0x8048810 <printf@plt>
    0x08048a42 <+146>:	add    esp,0xfffffff4
-   0x08048a45 <+149>:	push   0x80496a0
+   0x08048a45 <+149>:	push   0x80496a0			"have a nice day .."
    0x08048a4a <+154>:	call   0x8048810 <printf@plt>
    0x08048a4f <+159>:	add    esp,0x20
    0x08048a52 <+162>:	call   0x80491fc <read_line>
