@@ -1,0 +1,8 @@
+mount /mnt/iso  *.iso
+
+mount /mnt/iso/casper/filesystem.squashfs /tmp/fs/ -t squash -o loop
+
+ls /mnt/fs 
+bin	dev	home 	lib 	[...]
+
+
