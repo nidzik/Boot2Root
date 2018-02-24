@@ -1,1 +1,22 @@
+log page on forum : 
 1q\Ej?*5K5cy*AJ
+
+forum : 
+lmezard:1q\Ej?*5K5cy*AJ 	okok
+
+with that we got the user mail :
+laurie@born2sec.net
+
+nikto -host 10.12.1.108 -port 336
+osvdb-3092: /forum/ : this might be interesting
+osvdb-3093: /webmail
+/phypmyadmin/: phpmyadmin directory found 
+
+so we got a server mail let's try our login:passwd
+laurie@born2sec.net:1q\Ej?*5K5cy*AJ
+it works ! and we have a mail with root:phpmyadminpasswd
+
+nice but we can/t write on /var/www :/
+let's see if we have a writable page on this site..
+git clone https://github.com/maurosoria/dirsearch.git
+python3 dirsearch/dirsearch.py 
