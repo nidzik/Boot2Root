@@ -1,0 +1,3 @@
+SLASH
+
+echo -n "SLASH" | md5sum
