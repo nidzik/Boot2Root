@@ -1,0 +1,27 @@
+# Boot2Root
+
+## Be root on Mysql database
+
+- Find IPv4 of guest VM
+VBoxManage guestproperty get <VM-name> "/VirtualBox/GuestInfo/Net/0/V4/IP"
+
+- Found open doors
+ssh, http, https, https://<vm-ip>/forum, https://<vm-ip>/phpmyadmin, ftp
+
+- In forum found some auth log with password of user inside
+lmezard
+!q\]Ej?*5K5cy*AJ
+
+- Found in profil of lmezard, her email : laurie@borntosec.net
+
+- Download dirsearch.py to find possible path to exploid found
+  - /cgi-bin
+  -	/webmail
+  -	/server-status
+
+- Go to /webmail and use forum credential from lmezard to access mailbox
+- Found mail with root access of database
+#### user : root
+#### password : Fg-'kKXBj87E:aJ$
+
+- Go to https://<vm-ip>/phpmyadmin and connect to database manager

@@ -53,17 +53,26 @@ $ cat /mnt/fs
 ```
 
 Here we go, there is an archive in /home/LOOKATME
-
+```
+$ file fun
+fun: POSIX tar archive (GNU)
+```
+```
+$ tar xvf fun ; ls
+ft_fun  fun  README
+```
 After some trouble we can see there is some .pcap files containing a .c file
 
 With a little script in python we are able to recover the source file an then build it.
 
 ### laurie passwd
+```
+==> Iheartpwnage ======================================================>
+																	   |
+330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4  <=====
 
-From here we can connect to the machine with the credentials :
 ```
-laurie:330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
-```
+From here we can connect through ssh on the machine as laurie user.
 
 ### Dirty Cow, Race condition ptrace based
 
