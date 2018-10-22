@@ -70,4 +70,4 @@ The email and the password match for an squirel mail account !
 
 - Go to https://<vm-ip>/phpmyadmin and connect to database manager
 
-### WE ARE ROOT DB!!
+## WE ARE ROOT DB!!

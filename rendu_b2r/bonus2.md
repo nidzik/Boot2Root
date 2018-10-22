@@ -33,4 +33,4 @@ $db_settings['userdata_cache_table'] = 'mlf2_userdata_cache';
 Ho nice ! Here is the DB Root password !
 Go to /phpmyadmin and connect with thoses credentials !
 
-###WE ## ARE # ROOT DB !!
+## WE ARE ROOT DB !!

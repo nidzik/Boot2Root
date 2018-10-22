@@ -12,4 +12,4 @@ After we became root on the db we cam easily get the admin acces on the forum.
 
 connect to the forum as admin and lmezard's password.
 
-###WE ##ARE #ROOT FORUM !!
+## WE ARE ROOT FORUM !!
